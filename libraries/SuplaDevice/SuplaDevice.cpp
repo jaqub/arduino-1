@@ -46,15 +46,19 @@ ISR(TIMER1_COMPA_vect){
 #endif
 
 _supla_int_t supla_arduino_data_read(void *buf, _supla_int_t count, void *sdc) {
-    return ((SuplaDeviceClass*)sdc)->getCallbacks().tcp_read(buf, count);
+    SuplaDeviceClass *suplaDev = reinterpret_cast<SuplaDeviceClass *>(sdc);
+
+    return suplaDev->getCallbacks().tcp_read(buf, count);
 }
 
 _supla_int_t supla_arduino_data_write(void *buf, _supla_int_t count, void *sdc) {
 
-    _supla_int_t r = ((SuplaDeviceClass*)sdc)->getCallbacks().tcp_write(buf, count);
-    if ( r > 0 ) {
-        ((SuplaDeviceClass*)sdc)->onSent();
-    }
+    SuplaDeviceClass *suplaDev = reinterpret_cast<SuplaDeviceClass*>(sdc):
+
+    _supla_int_t r = suplaDev->getCallbacks().tcp_write(buf, count);
+    if ( r > 0 )
+        suplaDev->onSent();
+
     return r;
 }
 
