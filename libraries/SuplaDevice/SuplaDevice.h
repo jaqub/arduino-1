@@ -64,63 +64,63 @@ typedef void (*_impl_rs_load_settings)(int channelNumber, unsigned int *full_ope
 typedef void (*_impl_arduino_timer)(void);
 
 typedef struct SuplaDeviceCallbacks {
-	
-	_cb_arduino_rw tcp_read;
-	_cb_arduino_rw tcp_write;
-	_cb_arduino_eth_setup eth_setup;
-	_cb_arduino_connected svr_connected;
-	_cb_arduino_connect svr_connect;
-	_cb_arduino_stop svr_disconnect;
-	_cb_arduino_get_temperature get_temperature;
-	_cb_arduino_get_temperature_and_humidity get_temperature_and_humidity;
-	_cb_arduino_get_rgbw_value get_rgbw_value;
-	_cb_arduino_set_rgbw_value set_rgbw_value;
+
+    _cb_arduino_rw tcp_read;
+    _cb_arduino_rw tcp_write;
+    _cb_arduino_eth_setup eth_setup;
+    _cb_arduino_connected svr_connected;
+    _cb_arduino_connect svr_connect;
+    _cb_arduino_stop svr_disconnect;
+    _cb_arduino_get_temperature get_temperature;
+    _cb_arduino_get_temperature_and_humidity get_temperature_and_humidity;
+    _cb_arduino_get_rgbw_value get_rgbw_value;
+    _cb_arduino_set_rgbw_value set_rgbw_value;
     _cb_arduino_get_distance get_distance;
 
 }SuplaDeviceCallbacks;
 
 typedef struct SuplaDeviceParams {
-	
-	bool use_local_ip;
-	IPAddress local_ip;
-	
-	SuplaDeviceCallbacks cb;
-	TDS_SuplaRegisterDevice_C reg_dev;
-	uint8_t mac[6];
-	
+
+    bool use_local_ip;
+    IPAddress local_ip;
+
+    SuplaDeviceCallbacks cb;
+    TDS_SuplaRegisterDevice_C reg_dev;
+    uint8_t mac[6];
+
 }SuplaDeviceParams;
 
 typedef struct SuplaChannelPin {
-	int pin1;
-	int pin2;
-	bool hiIsLo;
-	bool bistable;
-	
-	unsigned long time_left;
-	unsigned long bi_time_left;
-	unsigned long vc_time;
-	
-	union {
-		uint8_t last_val;
-		double last_val_dbl1;
-		double last_val_dbl2;
-	};
+    int pin1;
+    int pin2;
+    bool hiIsLo;
+    bool bistable;
+
+    unsigned long time_left;
+    unsigned long bi_time_left;
+    unsigned long vc_time;
+
+    union {
+        uint8_t last_val;
+        double last_val_dbl1;
+        double last_val_dbl2;
+    };
 };
 
 typedef struct SuplaDeviceRollerShutterTask {
-    
+
     byte percent;
     byte direction;
     bool active;
-    
+
 };
 
 typedef struct SuplaDeviceRollerShutterCVR {
-    
+
     byte active;
     byte value;
     unsigned long time;
-    
+
 };
 
 typedef struct {
@@ -130,27 +130,27 @@ typedef struct {
 }SuplaDeviceRollerShutterButton;
 
 typedef struct SuplaDeviceRollerShutter {
-    
+
     SuplaDeviceRollerShutterButton btnUp;
     SuplaDeviceRollerShutterButton btnDown;
-    
+
     int position;
     int last_position;
     int channel_number;
     unsigned int full_opening_time;
     unsigned int full_closing_time;
-    
+
     unsigned long last_iterate_time;
     unsigned long tick_1s;
     unsigned long up_time;
     unsigned long down_time;
-    
+
     unsigned long start_time;
     unsigned long stop_time;
-    
+
     SuplaDeviceRollerShutterCVR cvr1; // Change Value Request 1
     SuplaDeviceRollerShutterCVR cvr2; 
-    
+
     SuplaDeviceRollerShutterTask task;
     byte save_position;
 };
@@ -159,42 +159,42 @@ typedef struct SuplaDeviceRollerShutter {
 class SuplaDeviceClass
 {
 protected:
-	void *srpc;
-	char registered;
-	bool isInitialized(bool msg);
-	void setString(char *dst, const char *src, int max_size);
-	int addChannel(int pin1, int pin2, bool hiIsLo, bool bistable);
-	void channelValueChanged(int channel_number, char v, double d, char var);
-	void channelSetValue(int channel, char value, _supla_int_t DurationMS);
-	void channelSetDoubleValue(int channelNum, double value);
-	void setDoubleValue(char value[SUPLA_CHANNELVALUE_SIZE], double v);
-	bool addDHT(int Type);
-	void channelSetTempAndHumidityValue(int channelNum, double temp, double humidity);
-	void setRGBWvalue(int channelNum, char value[SUPLA_CHANNELVALUE_SIZE]);
-	void channelSetRGBWvalue(int channel, char value[SUPLA_CHANNELVALUE_SIZE]);
+    void *srpc;
+    char registered;
+    bool isInitialized(bool msg);
+    void setString(char *dst, const char *src, int max_size);
+    int addChannel(int pin1, int pin2, bool hiIsLo, bool bistable);
+    void channelValueChanged(int channel_number, char v, double d, char var);
+    void channelSetValue(int channel, char value, _supla_int_t DurationMS);
+    void channelSetDoubleValue(int channelNum, double value);
+    void setDoubleValue(char value[SUPLA_CHANNELVALUE_SIZE], double v);
+    bool addDHT(int Type);
+    void channelSetTempAndHumidityValue(int channelNum, double temp, double humidity);
+    void setRGBWvalue(int channelNum, char value[SUPLA_CHANNELVALUE_SIZE]);
+    void channelSetRGBWvalue(int channel, char value[SUPLA_CHANNELVALUE_SIZE]);
 
-	SuplaDeviceParams Params;
-	_supla_int_t server_activity_timeout, last_response, last_sent;
-	SuplaChannelPin *channel_pin;
+    SuplaDeviceParams Params;
+    _supla_int_t server_activity_timeout, last_response, last_sent;
+    SuplaChannelPin *channel_pin;
     
     int rs_count;
     SuplaDeviceRollerShutter *roller_shutter;
     
     SuplaDeviceRollerShutter *rsByChannelNumber(int channel_number);
 
-	unsigned long last_iterate_time;
+    unsigned long last_iterate_time;
     unsigned long wait_for_iterate;
-	unsigned long last_ping_time;
-    
-	_impl_arduino_digitalRead impl_arduino_digitalRead;
-	_impl_arduino_digitalWrite impl_arduino_digitalWrite;
+    unsigned long last_ping_time;
+
+    _impl_arduino_digitalRead impl_arduino_digitalRead;
+    _impl_arduino_digitalWrite impl_arduino_digitalWrite;
     _impl_arduino_status impl_arduino_status;
-    
+
     _impl_rs_save_position impl_rs_save_position;
     _impl_rs_load_position impl_rs_load_position;
     _impl_rs_save_settings impl_rs_save_settings;
     _impl_rs_load_settings impl_rs_load_settings;
-    
+
     _impl_arduino_timer impl_arduino_timer;
 
     void rs_save_position(SuplaDeviceRollerShutter *rs);
@@ -212,35 +212,35 @@ protected:
     void rs_cancel_task(SuplaDeviceRollerShutter *rs);
     bool rs_button_released(SuplaDeviceRollerShutterButton *btn);
     void rs_buttons_processing(SuplaDeviceRollerShutter *rs);
-    
+
     void iterate_relay(SuplaChannelPin *pin, TDS_SuplaDeviceChannel_B *channel, unsigned long time_diff, int channel_idx);
     void iterate_sensor(SuplaChannelPin *pin, TDS_SuplaDeviceChannel_B *channel, unsigned long time_diff, int channel_idx);
     void iterate_thermometer(SuplaChannelPin *pin, TDS_SuplaDeviceChannel_B *channel, unsigned long time_diff, int channel_idx);
     void iterate_rollershutter(SuplaDeviceRollerShutter *rs, SuplaChannelPin *pin, TDS_SuplaDeviceChannel_B *channel);
-    
+
     void begin_thermometer(SuplaChannelPin *pin, TDS_SuplaDeviceChannel_B *channel, int channel_number);
-    
+
 private:
-	int suplaDigitalRead(int channelNumber, uint8_t pin);
+    int suplaDigitalRead(int channelNumber, uint8_t pin);
     bool suplaDigitalRead_isHI(int channelNumber, uint8_t pin);
-	void suplaDigitalWrite(int channelNumber, uint8_t pin, uint8_t val);
+    void suplaDigitalWrite(int channelNumber, uint8_t pin, uint8_t val);
     void suplaDigitalWrite_setHI(int channelNumber, uint8_t pin, bool hi);
     void status(int status, const char *msg);
 public:
    SuplaDeviceClass();
    ~SuplaDeviceClass();
-   
+
    void channelValueChanged(int channel_number, char v);
    void channelDoubleValueChanged(int channel_number, double v);
-    
+
    bool begin(IPAddress *local_ip, char GUID[SUPLA_GUID_SIZE], uint8_t mac[6], const char *Server,
-		      int LocationID, const char *LocationPWD);
-   
+              int LocationID, const char *LocationPWD);
+
    bool begin(char GUID[SUPLA_GUID_SIZE], uint8_t mac[6], const char *Server,
-		      int LocationID, const char *LocationPWD);
-   
+              int LocationID, const char *LocationPWD);
+
    void setName(const char *Name);
-   
+
    int addRelay(int relayPin1, int relayPin2, bool hiIsLo, bool bistable, _supla_int_t functions);
    bool addRelay(int relayPin1, int relayPin2, bool hiIsLo);
    bool addRelay(int relayPin1, bool hiIsLo);
@@ -258,18 +258,18 @@ public:
    bool addRgbController(void);
    bool addDimmer(void);
    bool addDistanceSensor(void);
-    
+
    bool relayOn(int channel_number, _supla_int_t DurationMS);
    bool relayOff(int channel_number);
-    
+
    void rollerShutterReveal(int channel_number);
    void rollerShutterShut(int channel_number);
    void rollerShutterStop(int channel_number);
    bool rollerShutterMotorIsOn(int channel_number);
-   
+
    void onTimer(void);
    void iterate(void);
-   
+
    SuplaDeviceCallbacks getCallbacks(void);
    void setTemperatureCallback(_cb_arduino_get_temperature get_temperature);
    void setTemperatureHumidityCallback(_cb_arduino_get_temperature_and_humidity get_temperature_and_humidity);
@@ -279,12 +279,12 @@ public:
                                    _impl_rs_load_position impl_load_position,
                                    _impl_rs_save_settings impl_save_settings,
                                    _impl_rs_load_settings impl_load_settings);
-   
+
    void setDigitalReadFuncImpl(_impl_arduino_digitalRead impl_arduino_digitalRead);
    void setDigitalWriteFuncImpl(_impl_arduino_digitalWrite impl_arduino_digitalWrite);
    void setStatusFuncImpl(_impl_arduino_status impl_arduino_status);
    void setTimerFuncImpl(_impl_arduino_timer impl_arduino_timer);
-    
+
    void onSent(void);
    void onResponse(void);
    void onVersionError(TSDC_SuplaVersionError *version_error);
@@ -292,12 +292,12 @@ public:
    void onSensorInterrupt(void);
    void channelSetValue(TSD_SuplaChannelNewValue *new_value);
    void channelSetActivityTimeoutResult(TSDC_SuplaSetActivityTimeoutResult *result);
-    
+
 
 };
 
-#include "supla_main_helper._cpp_"			
-			
+#include "supla_main_helper._cpp_"
+
 extern SuplaDeviceClass SuplaDevice;
 extern SuplaDeviceCallbacks supla_arduino_get_callbacks(void);
 #endif
