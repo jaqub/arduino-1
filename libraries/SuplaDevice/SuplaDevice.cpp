@@ -210,7 +210,6 @@ void SuplaDeviceClass::suplaDigitalWrite_setHI(int channelNumber, uint8_t pin, b
 void SuplaDeviceClass::setDigitalReadFuncImpl(_impl_arduino_digitalRead impl_arduino_digitalRead) {
 
     this->impl_arduino_digitalRead = impl_arduino_digitalRead;
-
 }
 
 void SuplaDeviceClass::setDigitalWriteFuncImpl(_impl_arduino_digitalWrite impl_arduino_digitalWrite) {
