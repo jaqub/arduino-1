@@ -201,9 +201,8 @@ void SuplaDeviceClass::suplaDigitalWrite(int channelNumber, uint8_t pin, uint8_t
 
 void SuplaDeviceClass::suplaDigitalWrite_setHI(int channelNumber, uint8_t pin, bool hi) {
 
-    if ( channel_pin[channelNumber].hiIsLo ) {
+    if ( channel_pin[channelNumber].hiIsLo )
         hi = hi ? LOW : HIGH;
-    }
 
     suplaDigitalWrite(channelNumber, pin, hi);
 }
