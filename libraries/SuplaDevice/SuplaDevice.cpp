@@ -196,9 +196,7 @@ void SuplaDeviceClass::suplaDigitalWrite(int channelNumber, uint8_t pin, uint8_t
     if ( impl_arduino_digitalWrite != NULL )
          return impl_arduino_digitalWrite(channelNumber, pin, val);
 
-
     digitalWrite(pin, val);
-
 }
 
 void SuplaDeviceClass::suplaDigitalWrite_setHI(int channelNumber, uint8_t pin, bool hi) {
