@@ -215,7 +215,6 @@ void SuplaDeviceClass::setDigitalReadFuncImpl(_impl_arduino_digitalRead impl_ard
 void SuplaDeviceClass::setDigitalWriteFuncImpl(_impl_arduino_digitalWrite impl_arduino_digitalWrite) {
 
     this->impl_arduino_digitalWrite = impl_arduino_digitalWrite;    
-
 }
 
 void SuplaDeviceClass::setStatusFuncImpl(_impl_arduino_status impl_arduino_status) {
