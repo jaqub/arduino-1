@@ -106,22 +106,28 @@ void supla_arduino_on_remote_call_received(void *_srpc, unsigned _supla_int_t rr
     TsrpcReceivedData rd;
     char result;
 
-    ((SuplaDeviceClass*)_sdc)->onResponse();
+    SuplaDeviceClass *suplaDev = reinterpret_cast<SuplaDeviceClass *>(_sdc);
 
-    if ( SUPLA_RESULT_TRUE == ( result = srpc_getdata(_srpc, &rd, 0)) ) {
+    suplaDev->onResponse();
+
+    result = srpc_getdata(_srpc, &rd, 0);
+    if ( result == SUPLA_RESULT_TRUE ) {
 
         switch(rd.call_type) {
         case SUPLA_SDC_CALL_VERSIONERROR:
-            ((SuplaDeviceClass*)_sdc)->onVersionError(rd.data.sdc_version_error);
+            suplaDev->onVersionError(rd.data.sdc_version_error);
             break;
         case SUPLA_SD_CALL_REGISTER_DEVICE_RESULT:
-            ((SuplaDeviceClass*)_sdc)->onRegisterResult(rd.data.sd_register_device_result);
+            suplaDev>onRegisterResult(rd.data.sd_register_device_result);
             break;
         case SUPLA_SD_CALL_CHANNEL_SET_VALUE:
-            ((SuplaDeviceClass*)_sdc)->channelSetValue(rd.data.sd_channel_new_value);
+            suplaDev->channelSetValue(rd.data.sd_channel_new_value);
             break;
         case SUPLA_SDC_CALL_SET_ACTIVITY_TIMEOUT_RESULT:
-            ((SuplaDeviceClass*)_sdc)->channelSetActivityTimeoutResult(rd.data.sdc_set_activity_timeout_result);
+            suplaDev->channelSetActivityTimeoutResult(rd.data.sdc_set_activity_timeout_result);
+            break;
+        default:
+            supla_log(LOG_DEBUG, "Unsupported call_type: (%u)");
             break;
         }
 
