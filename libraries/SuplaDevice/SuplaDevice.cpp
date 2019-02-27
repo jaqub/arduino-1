@@ -171,18 +171,11 @@ SuplaDeviceClass::SuplaDeviceClass() {
 }
 
 SuplaDeviceClass::~SuplaDeviceClass() {
-    if ( channel_pin != NULL ) {
+    if ( channel_pin != NULL )
         free(channel_pin);
-        channel_pin = NULL;
-    }
 
-    if ( roller_shutter != NULL ) {
+    if ( roller_shutter != NULL )
         free(roller_shutter);
-        roller_shutter = NULL;
-    }
-
-    rs_count = 0;
-
 }
 
 int SuplaDeviceClass::suplaDigitalRead(int channelNumber, uint8_t pin) {
