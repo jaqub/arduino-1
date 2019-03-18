@@ -347,22 +347,27 @@ bool SuplaDeviceClass::begin(char GUID[SUPLA_GUID_SIZE], uint8_t mac[6], const c
 
 void SuplaDeviceClass::begin_thermometer(SuplaChannelPin *pin, TDS_SuplaDeviceChannel_B *channel, int channel_number) {
 
-    if ( channel->Type == SUPLA_CHANNELTYPE_THERMOMETERDS18B20
-        && Params.cb.get_temperature != NULL ) {
+    switch (channel->Type) {
+      case SUPLA_CHANNELTYPE_THERMOMETERDS18B20:
+        if (Params.cb.get_temperature != NULL) {
+          pin->last_val_dbl1 = Params.cb.get_temperature(channel_number, pin->last_val_dbl1);
+          channelSetDoubleValue(channel_number, pin->last_val_dbl1);
+        }
+        break;
 
-        pin->last_val_dbl1 = Params.cb.get_temperature(channel_number, pin->last_val_dbl1);
-        channelSetDoubleValue(channel_number, pin->last_val_dbl1);
+      case SUPLA_CHANNELTYPE_DHT11:
+      case SUPLA_CHANNELTYPE_DHT22:
+      case SUPLA_CHANNELTYPE_AM2302:
+        if (Params.cb.get_temperature_and_humidity != NULL ) {
+          Params.cb.get_temperature_and_humidity(channel_number, &pin->last_val_dbl1, &pin->last_val_dbl2);
+          channelSetTempAndHumidityValue(channel_number, pin->last_val_dbl1, pin->last_val_dbl2);
+        }
+        break;
 
-    } else if ( ( channel->Type == SUPLA_CHANNELTYPE_DHT11
-                 || channel->Type == SUPLA_CHANNELTYPE_DHT22
-                 || channel->Type == SUPLA_CHANNELTYPE_AM2302 )
-               && Params.cb.get_temperature_and_humidity != NULL ) {
-
-        Params.cb.get_temperature_and_humidity(channel_number, &pin->last_val_dbl1, &pin->last_val_dbl2);
-        channelSetTempAndHumidityValue(channel_number, pin->last_val_dbl1, pin->last_val_dbl2);
+      case default:
+        break;
     }
-
-};
+}
 
 void SuplaDeviceClass::setName(const char *Name) {
 
