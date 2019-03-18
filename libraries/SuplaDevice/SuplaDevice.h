@@ -22,7 +22,6 @@
 
 #define ACTIVITY_TIMEOUT 30
 
-#define STATUS_ALREADY_INITIALIZED     2
 #define STATUS_CB_NOT_ASSIGNED         3
 #define STATUS_INVALID_GUID            4
 #define STATUS_UNKNOWN_SERVER_ADDRESS  5
@@ -161,7 +160,7 @@ class SuplaDeviceClass
 protected:
     void *srpc;
     char registered;
-    bool isInitialized(bool msg);
+    bool isInitialized();
     void setString(char *dst, const char *src, int max_size);
     int addChannel(int pin1, int pin2, bool hiIsLo, bool bistable);
     void channelValueChanged(int channel_number, char v, double d, char var);

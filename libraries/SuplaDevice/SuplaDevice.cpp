@@ -225,14 +225,9 @@ void SuplaDeviceClass::setTimerFuncImpl(_impl_arduino_timer impl_arduino_timer) 
     this->impl_arduino_timer = impl_arduino_timer;
 }
 
-bool SuplaDeviceClass::isInitialized(bool msg) {
-    if ( srpc != NULL ) {
-
-        if ( msg )
-            status(STATUS_ALREADY_INITIALIZED, "SuplaDevice is already initialized");
-
+bool SuplaDeviceClass::isInitialized() {
+    if ( srpc != NULL )
         return true;
-    }
 
     return false;
 }
