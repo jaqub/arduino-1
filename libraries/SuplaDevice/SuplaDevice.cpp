@@ -93,12 +93,10 @@ void float2DoublePacked(float number, byte* bar, int byteOrder=LSBFIRST)
 
 void SuplaDeviceClass::status(int status, const char *msg) {
 
-    if ( impl_arduino_status != NULL ) {
-        impl_arduino_status(status, msg);
-    } else {
-        supla_log(LOG_DEBUG, "%s", msg);
-    }
+    if ( impl_arduino_status != NULL )
+        return impl_arduino_status(status, msg);
 
+    supla_log(LOG_DEBUG, "%s", msg);
 }
 
 void supla_arduino_on_remote_call_received(void *_srpc, unsigned _supla_int_t rr_id, unsigned _supla_int_t call_type, void *_sdc, unsigned char proto_version) {
